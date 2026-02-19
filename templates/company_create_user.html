@@ -1,0 +1,148 @@
+{% block content %}
+<section class="section" style="background-color:#1e1e2f; min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding-top:50px;">
+  <div class="box" style="background-color:#2b2b3d; color:#fff; padding:30px 25px; border-radius:12px; width:100%; max-width:500px;">
+    <h1 class="title has-text-white has-text-centered mb-4">Create Agent / Customer</h1>
+    <form method="post">
+
+      <!-- ID -->
+      <div class="field">
+        <label class="label has-text-white">ID</label>
+        <div class="control">
+          <input class="input" name="id" type="number" required placeholder="Enter ID"
+                 style="background-color:#3a3a4f; color:#fff; border:none; height:45px; font-size:16px;">
+        </div>
+      </div>
+
+      <!-- Name -->
+      <div class="field">
+        <label class="label has-text-white">Name</label>
+        <div class="control">
+          <input class="input" name="name" type="text" required placeholder="Enter name"
+                 style="background-color:#3a3a4f; color:#fff; border:none; height:45px; font-size:16px;">
+        </div>
+      </div>
+
+      <!-- User Type -->
+      <div class="field">
+        <label class="label has-text-white">Type</label>
+        <div class="control">
+          <div class="select is-fullwidth" style="background-color:#3a3a4f; border-radius:6px; height:45px;">
+            <select id="user_type" name="user_type" style="background-color:#3a3a4f; color:#fff; height:45px; font-size:16px; padding-left:10px;">
+              <option value="agent">Agent</option>
+              <option value="customer">Customer</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Type -->
+      <div class="field" id="customer_type_field">
+        <label class="label has-text-white">Customer Type</label>
+        <div class="control">
+          <div class="select is-fullwidth" style="background-color:#3a3a4f; border-radius:6px; height:45px;">
+            <select id="customer_type" name="customer_type" style="background-color:#3a3a4f; color:#fff; height:45px; font-size:16px; padding-left:10px;">
+              <option value="prepaid">Prepaid</option>
+              <option value="postpaid">Postpaid</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prepaid Balance -->
+      <div class="field" id="balance_field">
+        <label class="label has-text-white">Balance</label>
+        <div class="control">
+          <input class="input" name="balance" type="number" step="0.01" placeholder="Balance (prepaid only)"
+                 style="background-color:#3a3a4f; color:#fff; border:none; height:45px; font-size:16px;">
+        </div>
+      </div>
+
+      <!-- Prepaid Recharge Date -->
+      <div class="field" id="recharge_date_field">
+        <label class="label has-text-white">Recharge Date</label>
+        <div class="control">
+          <input class="input" name="recharge_date" type="date"
+                 style="background-color:#3a3a4f; color:#fff; border:none; height:45px; font-size:16px;">
+        </div>
+      </div>
+
+      <!-- Unit Usage (always for customers) -->
+      <div class="field" id="unit_usage_field">
+        <label class="label has-text-white">Unit Usage</label>
+        <div class="control">
+          <input class="input" name="unit_usage" type="number" step="0.01" placeholder="Units used"
+                 style="background-color:#3a3a4f; color:#fff; border:none; height:45px; font-size:16px;">
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label class="label has-text-white">Password</label>
+        <div class="control">
+          <input class="input" name="password" type="password" required placeholder="Enter password"
+                 style="background-color:#3a3a4f; color:#fff; border:none; height:45px; font-size:16px;">
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="field mt-4">
+        <div class="control">
+          <button class="button is-primary is-fullwidth" style="background-color:#4e73df; border:none; color:#fff; height:45px; font-size:16px;">
+            Create
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<script>
+function updateForm() {
+    const userType = document.getElementById('user_type').value;
+    const customerType = document.getElementById('customer_type').value;
+
+    // Hide all optional fields by default
+    const fields = [
+        'customer_type_field',
+        'balance_field',
+        'recharge_date_field',
+        'unit_usage_field'
+    ];
+    fields.forEach(f => document.getElementById(f).style.display = 'none');
+
+    if(userType === 'customer') {
+        document.getElementById('customer_type_field').style.display = 'block';
+        document.getElementById('unit_usage_field').style.display = 'block';
+
+        if(customerType === 'prepaid') {
+            document.getElementById('balance_field').style.display = 'block';
+            document.getElementById('recharge_date_field').style.display = 'block';
+        }
+        // postpaid customers: no additional fields in form
+    }
+}
+
+// Initial run
+updateForm();
+
+// Event listeners
+document.getElementById('user_type').addEventListener('change', updateForm);
+document.getElementById('customer_type').addEventListener('change', updateForm);
+</script>
+
+<style>
+.input:focus, select:focus {
+  border-color: #4e73df !important;
+  box-shadow: 0 0 0 0.2rem rgba(78,115,223,.25);
+}
+.select select {
+  background-color: #3a3a4f;
+  color: #fff;
+}
+body {
+  background-color: #1e1e2f;
+  margin: 0;
+}
+</style>
+{% endblock %}

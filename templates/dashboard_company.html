@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+/* ===== Dashboard Styling ===== */
+.dashboard-section { margin-bottom: 2.5rem; padding-left: 2rem; padding-right: 2rem; }
+.dash-card { background-color: #2a2a40; color: #e5e5e5; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.4); padding-left: 1.5rem; padding-right: 1.5rem; }
+.section-title { font-size: 1.8rem; font-weight: 700; color: #00d1b2; margin-bottom: 1.2rem; border-bottom: 2px solid #00d1b2; padding-bottom: 0.3rem; }
+.dash-card ul { list-style: none; padding-left: 0; margin: 0; }
+.dash-card li { margin-bottom: 0.7rem; padding: 8px 12px; border-radius: 6px; background-color: #242438; display: flex; justify-content: space-between; align-items: center; }
+.dash-card li:last-child { margin-bottom: 0; }
+.badge { padding: 4px 10px; border-radius: 6px; font-weight: 600; text-transform: capitalize; }
+.status-active { background-color: #3273dc; color: white; }
+.status-due { background-color: #ff3860; color: white; }
+.status-paid { background-color: #23d160; color: white; }
+.balance { background-color: #ffdd57; color: #222; }
+.action-btn { background-color: #ff3860; color: #fff; border: none; border-radius: 6px; padding: 3px 8px; margin-left: 5px; cursor: pointer; font-size: 0.85rem; }
+.action-btn.update { background-color: #3273dc; }
+h1.page-title { text-align: center; font-size: 2rem; color: #fff; margin-bottom: 2.5rem; }
+</style>
+
+<h1 class="page-title">Company Dashboard</h1>
+
+<div class="dashboard-section">
+  <h2 class="section-title">Company Info</h2>
+  <div class="dash-card">
+    <p><strong>Name:</strong> {{ company.company_name }}</p>
+    <p><strong>Location:</strong> {{ company.location }}</p>
+  </div>
+</div>
+
+<div class="dashboard-section">
+  <h2 class="section-title">Users Overview</h2>
+
+  <h3>Agents</h3>
+  <div class="dash-card">
+    <ul>
+      {% for agent in agents %}
+      <li>
+        <span>{{ agent.id }}</span>
+        <span>{{ agent.name }}</span>
+        <span class="badge status-active">{{ agent.role }}</span>
+        <span>
+          <a href="{{ url_for('company_update_user', user_type='agent', user_id=agent.id) }}" class="action-btn update">Update</a>
+          </form>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <h3>Prepaid Customers</h3>
+  <div class="dash-card">
+    <ul>
+      {% for customer in prepaid %}
+      <li>
+        <span>{{ customer.id }}</span>
+        <span>{{ customer.name }}</span>
+        <span class="badge balance">Balance: ${{ customer.balance }}</span>
+        <span>
+          <a href="{{ url_for('company_update_user', user_type='prepaid', user_id=customer.id) }}" class="action-btn update">Update</a>
+          </form>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <h3>Postpaid Customers</h3>
+  <div class="dash-card">
+    <ul>
+      {% for customer in postpaid %}
+      <li>
+        <span>{{ customer.id }}</span>
+        <span>{{ customer.name }}</span>
+        <span class="badge {% if customer.status == 'due' %}status-due{% else %}status-paid{% endif %}">
+          Bill: ${{ customer.bill_amount }} - {{ customer.status }}
+        </span>
+        <span>Due: {{ customer.due_date }}</span>
+        <span>
+          <a href="{{ url_for('company_update_user', user_type='postpaid', user_id=customer.id) }}" class="action-btn update">Update</a>
+          </form>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

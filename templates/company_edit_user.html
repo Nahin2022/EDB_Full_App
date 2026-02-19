@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="title">Edit User {{ target.id }}</h1>
+<form method="post">
+<div class="field"><label class="label">Password</label><input class="input" name="password" type="password"></div>
+<div class="field"><label class="label">Balance</label><input class="input" name="balance" value="{{ target.balance or '' }}"></div>
+<div class="field"><label class="label">Bill Amount</label><input class="input" name="bill_amount" value="{{ target.bill_amount or '' }}"></div>
+<div class="field"><label class="label">Due Date</label><input class="input" name="due_date" value="{{ target.due_date or '' }}" type="date"></div>
+<button class="button is-primary">Save</button>
+</form>
+{% endblock %}

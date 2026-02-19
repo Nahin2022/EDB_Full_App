@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EDDBS Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.5/css/bulma.min.css">
+
+  <style>
+    html, body {
+      background-color: #1e1e2f;
+      color: #e5e5e5;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+    .topbar {
+      background: #242438;
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      margin: 1.5rem auto 0;
+      max-width: 1200px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    .top-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      background-color: #00d1b2;
+      color: #fff !important;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .action-btn:hover {
+      background-color: #00b89c;
+    }
+  </style>
+
+</head>
+
+<body>
+
+{% set user = session.get('user') %}
+
+{% if user %}
+    {% set role =
+        'Super Admin' if user.user_type == 'admin' else
+        'Company Admin' if user.user_type == 'company' else
+        'Agent' if user.user_type == 'agent' else
+        'Customer'
+    %}
+
+    {% set loc = user.location|lower %}
+    {% set location =
+        'Nesco' if loc in ['rajshahi', 'nesco'] else
+        'Desco' if loc in ['dhaka', 'desco'] else
+        'Super Admin' if loc in ['hq', 'admin'] else
+        'PBS'
+    %}
+{% endif %}
+
+
+<!-- ===================== DYNAMIC HEADER ===================== -->
+
+<div class="topbar">
+
+    <h2 style="font-size: 28px;">EDDBS</h2>
+
+    <p id="login-text" style="font-weight:bold; margin:5px 0;"></p>
+    <p id="welcome-text" style="opacity:0.9;"></p>
+
+    <div class="top-actions">
+
+        {% if user.user_type == 'admin' %}
+            <a href="{{ url_for('admin_create_company') }}" class="action-btn">Add Company Admin</a>
+
+        {% elif user.user_type == 'company' %}
+            <a href="{{ url_for('company_create_user') }}" class="action-btn">Add User</a>
+            <a href="{{ url_for('company_postpaid_users') }}" class="action-btn"> Billing</a>
+
+        {% elif user.user_type == 'agent' %}
+            <!-- agent buttons if needed -->
+
+        {% elif user.user_type == 'customer' %}
+            <!-- customer buttons if needed -->
+        {% endif %}
+
+        <a href="{{ url_for('logout') }}" class="action-btn" style="background-color:#ff3860;">Logout</a>
+    </div>
+
+</div>
+
+<!-- Pass data to JS -->
+<script>
+    const userData = {
+        id: "{{ user.id }}",
+        user_type: "{{ user.user_type }}",
+        location: "{{ location }}",
+        role: "{{ role }}"
+    };
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const id = userData.id;
+    const userType = userData.user_type;
+    const location = userData.location;
+
+    const typeDisplay = {
+        "admin": "Super Admin",
+        "company": "Company Admin",
+        "agent": "Agent",
+        "customer": "Customer"
+    };
+
+    const loginEntity = {
+        "admin": "Super Admin",
+        "company": `Company (${id}) Admin`,
+        "agent": `Agent (${id})`,
+        "customer": `Customer (${id})`
+    };
+
+    // Set "Login as ..." message
+    if (userType === 'admin') {
+        document.getElementById("login-text").textContent =
+            `Welcome, ${typeDisplay[userType]}`; // Super Admin only
+    } else {
+        document.getElementById("login-text").textContent =
+            `Welcome, ${typeDisplay[userType]} - ${location}`;
+    }
+
+    // Set "Welcome ..." message
+    if (userType === 'admin') {
+        document.getElementById("welcome-text").textContent =
+            `Welcome, ${typeDisplay[userType]}`; // Super Admin only
+    } else {
+        document.getElementById("welcome-text").textContent =
+            `Welcome, ${typeDisplay[userType]} - ${location}`;
+    }
+    setTimeout(() => {
+        document.getElementById("login-text").style.display = "none";
+    }, 3000);
+});
+</script>
+
+<!-- ================= MAIN CONTENT ================= -->
+<section class="section">
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for cat, msg in messages %}
+                    <div class="notification is-{{ 'danger' if cat == 'error' else 'success' }}">
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</section>
+
+</body>
+</html>

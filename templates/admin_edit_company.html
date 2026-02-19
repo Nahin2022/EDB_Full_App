@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="title" style="font-size: 2rem; font-weight: bold; text-align: center; margin-bottom: 20px;">Edit Company {{ comp.id }}</h1>
+
+<form method="post" style="max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
+  
+  <div class="field" style="margin-bottom: 15px;">
+    <label class="label" style="font-size: 1.1rem; font-weight: bold;">Location</label>
+    <input class="input" name="location" value="{{ comp.location }}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;"/>
+  </div>
+
+  <div class="field" style="margin-bottom: 20px;">
+    <label class="label" style="font-size: 1.1rem; font-weight: bold;">Password (leave blank to keep the current one)</label>
+    <input class="input" name="password" type="password" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;"/>
+  </div>
+
+  <button class="button is-primary" style="background-color: #4CAF50; color: white; width: 100%; padding: 12px; font-size: 1.2rem; border-radius: 5px; border: none; cursor: pointer;">
+    Save
+  </button>
+
+</form>
+
+{% endblock %}

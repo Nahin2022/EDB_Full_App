@@ -1,0 +1,107 @@
+{% block content %}
+<section class="section" style="background-color:#1e1e2f; min-height:100vh; display:flex; justify-content:center; align-items:center; padding:20px;">
+  <div class="box" style="background-color:#2b2b3d; color:#fff; padding:40px 30px; border-radius:12px; width:100%; max-width:400px;">
+    <h1 class="title has-text-white has-text-centered">Login</h1>
+    
+    <!-- Mode Toggle -->
+    <div class="field">
+      <label class="label has-text-white">Login As</label>
+      <div class="control">
+        <div class="select is-fullwidth" style="background-color:#3a3a4f; color:#fff; border-radius:6px;">
+          <select id="loginMode" onchange="toggleLoginMode()" style="background-color:#3a3a4f; color:#fff; font-size:16px;">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Form -->
+    <form method="post">
+      <!-- User ID -->
+      <div class="field">
+        <label class="label has-text-white">User ID</label>
+        <div class="control">
+          <input class="input" name="user_id" type="number" required placeholder="Enter your ID"
+                 style="background-color:#3a3a4f; color:#fff; border:none; height:45px; font-size:16px;">
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label class="label has-text-white">Password</label>
+        <div class="control">
+          <input class="input" name="password" type="password" required placeholder="Enter password"
+                 style="background-color:#3a3a4f; color:#fff; border:none; height:45px; font-size:16px;">
+        </div>
+      </div>
+
+      <!-- Location dropdown for users -->
+      <div id="locationField" class="field" style="display:none;">
+        <label class="label has-text-white">Location (only for users)</label>
+        <div class="control">
+          <div class="select is-fullwidth" style="background-color:#3a3a4f; border-radius:6px; height:45px;">
+            <select name="location" required style="background-color:#3a3a4f; color:#fff; height:45px; font-size:16px; padding-left:10px;">
+              <option value="" disabled selected>Select your location</option>
+              <option value="rajshahi">Rajshahi</option>
+              <option value="dhaka">Dhaka</option>
+              <option value="sylhet">Sylhet</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <p class="help has-text-grey-lighter" style="margin-top:5px; font-size:0.85rem;">
+          You must choose a location if you're a user
+        </p>
+      </div>
+
+      <!-- Submit -->
+      <div class="field mt-4">
+        <div class="control">
+          <button class="button is-primary is-fullwidth"
+                  style="background-color:#4e73df; border:none; color:#fff; height:45px; font-size:16px;">Login</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  // Function to toggle the visibility of the location field
+  function toggleLoginMode() {
+    const loginMode = document.getElementById('loginMode').value;
+    const locationField = document.getElementById('locationField');
+    const locationInput = locationField.querySelector('select');
+    
+    if (loginMode === 'user') {
+      locationField.style.display = 'block'; // Show location for users
+      locationInput.required = true; // Make location required
+    } else {
+      locationField.style.display = 'none'; // Hide location for admin
+      locationInput.required = false; // Location is not required for admin
+    }
+  }
+  
+  // Initialize with default setting
+  toggleLoginMode();
+</script>
+
+<style>
+body {
+  background-color: #1e1e2f;
+  margin: 0;
+}
+.input:focus, select:focus {
+  border-color: #4e73df !important;
+  box-shadow: 0 0 0 0.2rem rgba(78,115,223,.25);
+}
+.select select {
+  background-color: #3a3a4f;
+  color: #fff;
+}
+.help {
+  font-size: 0.8rem;
+}
+</style>
+
+{% endblock %}

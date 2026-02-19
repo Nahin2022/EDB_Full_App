@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+/* ===== Form Styling (Dark Mode) ===== */
+.form-card {
+  background-color: #2a2a40;
+  color: #e5e5e5;
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.form-card .label {
+  color: #cfcfcf;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-card .input {
+  background-color: #242438;
+  border: 1px solid #44445a;
+  color: #eaeaea;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-card .input:focus {
+  border-color: #00d1b2;
+  box-shadow: 0 0 6px rgba(0,209,178,0.4);
+}
+
+.form-card button {
+  background-color: #00d1b2;
+  color: white;
+  width: 100%;
+  padding: 0.9rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.form-card button:hover {
+  background-color: #00b89c;
+}
+
+/* Title styling */
+.page-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Subtle hover effect */
+.form-card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-card {
+    padding: 1.5rem;
+  }
+}
+</style>
+
+<h1 class="page-title">Create Company (Admin)</h1>
+
+<form method="post" class="form-card">
+  <div class="field">
+    <label class="label">Company ID</label>
+    <div class="control">
+      <input class="input" name="id" type="number" required placeholder="Enter unique company ID">
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Location</label>
+    <div class="control">
+      <input class="input" name="location" required placeholder="Enter company location">
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Password</label>
+    <div class="control">
+      <input class="input" name="password" type="password" required placeholder="Set a strong password">
+    </div>
+  </div>
+
+  <button type="submit">Create Company</button>
+</form>
+{% endblock %}

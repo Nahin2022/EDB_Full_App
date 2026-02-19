@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.table-box {
+    background: #2a2a40;
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 1100px;
+    margin: 20px auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+}
+
+.table thead {
+    background: #00d1b2;
+    color: white;
+}
+
+.table th, .table td {
+    text-align: center;
+    color: #eaeaea;
+    vertical-align: middle;
+    padding: 14px;
+}
+
+.table tbody tr:hover {
+    background: #3a3a55;
+    cursor: pointer;
+}
+
+.title-custom {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+    font-size: 2.2rem;
+}
+</style>
+
+<h2 class="title-custom">Postpaid Customers</h2>
+
+<div class="table-box">
+  <table style="width:100%; text-align:center;" class="table is-fullwidth is-striped is-hoverable">
+    <thead>
+      <tr>
+        <th style="width:20%; text-align:center;">Meter No</th>
+        <th style="width:20%; text-align:center;">Name</th>
+        <th style="width:20%; text-align:center;">Outstanding</th>
+        <th style="width:20%; text-align:center;">Create Bill</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td style="width:20%; text-align:center;">{{ u.meter_no }}</td>
+        <td style="width:20%; text-align:center;">{{ u.name }}</td>
+        <td style="width:20%; text-align:center;">{{ u.outstanding or 0 }}</td>
+        <td style="width:20%; text-align:center;">
+          <a class="button is-primary is-small" 
+             href="{{ url_for('company_bill_user', user_id=u.id) }}">
+            Bill User
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

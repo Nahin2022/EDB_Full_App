@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4e73df;
+            --primary-dark: #2e59d9;
+            --dark-bg: #1e1e2f;
+            --dark-card: #2b2b3d;
+            --dark-card-light: #34344a;
+            --text-light: #f8f9fc;
+            --text-muted: #b7b9cc;
+            --success: #1cc88a;
+            --danger: #e74a3b;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #2d2d44 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-light);
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #6f8fdf 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .dashboard-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, var(--dark-card) 0%, var(--dark-card-light) 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 4px 15px rgba(78, 115, 223, 0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 5px 20px rgba(78, 115, 223, 0.3);
+        }
+        
+        .card-header {
+            padding: 1.5rem 1.5rem 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .form-input {
+            background-color: rgba(58, 58, 79, 0.8);
+            color: var(--text-light);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #6f8fdf 100%);
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            padding: 12px 30px;
+            box-shadow: 0 4px 15px rgba(78, 115, 223, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(78, 115, 223, 0.5);
+        }
+        
+        .table-container {
+            background: linear-gradient(145deg, var(--dark-card) 0%, var(--dark-card-light) 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+        
+        .table {
+            background: transparent;
+            color: var(--text-light);
+            width: 100%;
+        }
+        
+        .table thead {
+            background: linear-gradient(135deg, rgba(78, 115, 223, 0.3) 0%, rgba(111, 143, 223, 0.2) 100%);
+        }
+        
+        .table th {
+            color: var(--text-light);
+            font-weight: 600;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .table td {
+            padding: 18px;
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        .table tbody tr:hover {
+            background: rgba(78, 115, 223, 0.1);
+        }
+        
+        .status-tag {
+            border-radius: 50px;
+            font-weight: 600;
+            padding: 8px 16px;
+            display: inline-block;
+        }
+        
+        .status-paid {
+            background: linear-gradient(135deg, var(--success) 0%, #3ecf8e 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(28, 200, 138, 0.3);
+        }
+        
+        .status-pending {
+            background: linear-gradient(135deg, var(--danger) 0%, #e35d6a 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(231, 74, 59, 0.3);
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .stats-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        .stats-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .stats-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-title {
+                font-size: 2rem;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            .stats-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="section">
+        <div class="dashboard-container">
+            <!-- Header Section -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Agent Dashboard</h1>
+                <p class="dashboard-subtitle">Manage customer payments and recharges</p>
+            </div>
+            
+            <!-- Stats Overview -->
+            <div class="columns is-multiline is-centered">
+                <div class="column is-3">
+                    <div class="card stats-card">
+                        <div class="stats-icon has-text-primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stats-value">1,254</div>
+                        <div class="stats-label">Total Customers</div>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="card stats-card">
+                        <div class="stats-icon has-text-success">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stats-value">$12,458</div>
+                        <div class="stats-label">Processed Today</div>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="card stats-card">
+                        <div class="stats-icon has-text-info">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div class="stats-value">48</div>
+                        <div class="stats-label">Pending Bills</div>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="card stats-card">
+                        <div class="stats-icon has-text-warning">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div class="stats-value">92%</div>
+                        <div class="stats-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Form -->
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Payment / Recharge</h2>
+                        </div>
+                        <div class="card-content">
+                            <form method="post" action="#">
+                                <div class="field">
+                                    <label class="label has-text-white">Customer ID</label>
+                                    <div class="control">
+                                        <input class="input form-input is-medium" 
+                                               name="user_id" 
+                                               type="number" 
+                                               placeholder="Enter customer ID"
+                                               required>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label has-text-white">Amount</label>
+                                    <div class="control">
+                                        <input class="input form-input is-medium" 
+                                               name="amount" 
+                                               type="number" 
+                                               step="0.01" 
+                                               placeholder="Enter amount"
+                                               required>
+                                    </div>
+                                </div>
+
+                                <div class="field is-grouped is-justify-content-center mt-5">
+                                    <div class="control">
+                                        <button class="button btn-primary is-medium">
+                                            <span class="icon">
+                                                <i class="fas fa-paper-plane"></i>
+                                            </span>
+                                            <span>Submit Payment / Recharge</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bills Table -->
+            <div class="columns is-centered">
+                <div class="column is-10">
+                    <h3 class="title is-3 has-text-white has-text-centered mb-4">Recent Bills</h3>
+                    
+                    <div class="table-container">
+                        <table class="table is-fullwidth is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th>Customer ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1001</td>
+                                    <td>John Smith</td>
+                                    <td>$125.50</td>
+                                    <td>2023-10-15</td>
+                                    <td>
+                                        <span class="status-tag status-paid">Paid</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1002</td>
+                                    <td>Sarah Johnson</td>
+                                    <td>$89.99</td>
+                                    <td>2023-10-18</td>
+                                    <td>
+                                        <span class="status-tag status-pending">Pending</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1003</td>
+                                    <td>Michael Brown</td>
+                                    <td>$210.00</td>
+                                    <td>2023-10-12</td>
+                                    <td>
+                                        <span class="status-tag status-paid">Paid</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1004</td>
+                                    <td>Emily Davis</td>
+                                    <td>$75.25</td>
+                                    <td>2023-10-20</td>
+                                    <td>
+                                        <span class="status-tag status-pending">Pending</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1005</td>
+                                    <td>Robert Wilson</td>
+                                    <td>$150.00</td>
+                                    <td>2023-10-10</td>
+                                    <td>
+                                        <span class="status-tag status-paid">Paid</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="has-text-centered mt-4">
+                        <button class="button is-outlined is-light">
+                            <span class="icon">
+                                <i class="fas fa-history"></i>
+                            </span>
+                            <span>View All Bills</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Simple animation for cards on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+</html>
